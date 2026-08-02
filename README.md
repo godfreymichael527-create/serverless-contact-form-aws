@@ -1,34 +1,29 @@
+
 # 🚀 Serverless Contact Form on AWS
 
 A fully serverless contact form application built using Amazon Web Services (AWS). This project demonstrates how multiple AWS managed services can be integrated to build a secure, scalable, and cost-effective web application without provisioning or managing traditional servers.
 
 The application enables users to submit messages through a contact form hosted on Amazon S3. Whenever a user submits the form, the request is forwarded to Amazon API Gateway, which invokes an AWS Lambda function. The Lambda function validates the submitted information, stores it in Amazon DynamoDB, and sends an email notification using Amazon Simple Email Service (SES). Finally, the application returns a response to the website informing the user whether the submission was successful.
 
-By adopting a serverless architecture, the application automatically scales based on incoming requests while reducing infrastructure management and operational costs. Every AWS service used within the project performs a specific responsibility, allowing the entire application to operate efficiently without the need for dedicated web servers.
+By adopting a serverless architecture, the application automatically scales based on incoming requests while reducing infrastructure management and operational costs.
 
 ---
 
 # 📖 Project Overview
 
-The purpose of this project was to design and implement a complete serverless contact form application using AWS managed services. Instead of deploying and maintaining traditional backend servers, databases, and mail servers, this solution relies entirely on AWS services to process user requests.
+This project demonstrates the implementation of a complete serverless web application using AWS managed services. Instead of deploying and maintaining traditional web servers, databases, and email servers, the solution relies entirely on managed AWS services to process requests, store data, and send notifications.
 
-The project demonstrates how cloud-native applications can be developed using event-driven architecture. The frontend is hosted as a static website using Amazon S3, while API Gateway provides the communication layer between the website and the backend. AWS Lambda performs all backend processing, DynamoDB stores submitted information, and Amazon SES delivers email notifications whenever a new contact form is received.
-
-This project also demonstrates how different AWS services can communicate securely through IAM roles and permissions while providing a highly available and scalable solution.
+The application follows an event-driven architecture where each AWS service performs a dedicated task. Amazon S3 hosts the frontend, Amazon API Gateway receives incoming requests, AWS Lambda processes business logic, Amazon DynamoDB stores user submissions, and Amazon SES sends email notifications.
 
 ---
 
 # 🎯 Project Purpose
 
-The primary purpose of this project is to build a fully functional serverless contact form capable of receiving user messages, processing the submitted information, storing it securely, and automatically notifying the administrator via email.
-
-The project also provides practical experience with modern cloud technologies and demonstrates how AWS managed services can replace traditional server-based applications.
+The purpose of this project is to build a fully functional serverless contact form capable of securely receiving user messages, storing them in a cloud database, and automatically notifying the administrator through email.
 
 ---
 
 # 🎯 Project Objectives
-
-The objectives of this project are to:
 
 - Design and deploy a serverless web application using AWS.
 - Host a static website using Amazon S3.
@@ -37,9 +32,7 @@ The objectives of this project are to:
 - Validate user input before processing requests.
 - Store contact form submissions securely in Amazon DynamoDB.
 - Send automated email notifications using Amazon SES.
-- Implement secure access between AWS services using IAM.
-- Demonstrate event-driven serverless architecture.
-- Gain practical experience integrating multiple AWS services into a single application.
+- Implement secure communication using IAM.
 
 ---
 
@@ -62,33 +55,33 @@ The objectives of this project are to:
 (Store Submission)      (Send Email Notification)
 ```
 
-### Architecture Explanation
+## Architecture Explanation
 
-The workflow begins when a user accesses the contact form hosted on Amazon S3 and submits their information.
+The serverless contact form follows an event-driven architecture where each AWS service performs a specific role in processing user requests. Instead of relying on traditional web servers, the application uses managed AWS services that automatically scale based on demand.
 
-The request is forwarded to Amazon API Gateway, which exposes a REST endpoint for the application. API Gateway validates the incoming request and invokes the AWS Lambda function.
+The workflow begins when a user opens the contact form hosted on **Amazon S3**. Since the website consists of static files such as HTML, CSS, and JavaScript, Amazon S3 serves these files directly to the user's browser.
 
-The Lambda function executes the backend Python code responsible for validating the submitted data. Once validation is complete, the function generates a unique submission identifier and stores the information in Amazon DynamoDB.
+When the user completes the form and clicks **Submit**, the frontend sends an HTTP **POST** request to **Amazon API Gateway**. API Gateway acts as the communication layer between the frontend and the backend by exposing a REST API endpoint that securely receives incoming requests.
 
-After successfully storing the submission, AWS Lambda communicates with Amazon Simple Email Service (SES), which sends an email notification containing the submitted details to the configured recipient.
+API Gateway then invokes the **AWS Lambda** function. Lambda executes the Python code responsible for validating the submitted data, processing the request, generating a unique `submission_id`, and coordinating the remaining backend tasks.
 
-Finally, Lambda returns a JSON response through API Gateway back to the frontend, allowing the user to receive immediate confirmation that the message has been successfully submitted.
+After successful validation, the Lambda function stores the contact form details in **Amazon DynamoDB**, ensuring every submission is permanently saved in a fully managed NoSQL database.
+
+Next, Lambda communicates with **Amazon Simple Email Service (SES)** to automatically send an email notification containing the submitted information to the configured recipient.
+
+Finally, Lambda returns a JSON response to API Gateway, which forwards the response back to the frontend application. The website then displays a confirmation message indicating that the contact form has been submitted successfully.
+
+This architecture provides a scalable, reliable, and cost-effective solution while eliminating the need to manage traditional servers.
 
 ---
 
 # ☁️ AWS Services Used
 
-Each AWS service within this project performs a specific responsibility that contributes to the successful execution of the application.
-
----
-
 ## Amazon S3 (Simple Storage Service)
 
-Amazon S3 was used to host the frontend of the application as a static website. All website assets, including the HTML, CSS, JavaScript files, and images, were uploaded to an S3 bucket.
+Amazon S3 was used to host the frontend as a static website. After creating the bucket, Static Website Hosting was enabled and the website files (HTML, CSS, JavaScript and assets) were uploaded.
 
-Static Website Hosting was enabled, allowing the website to be publicly accessible through the generated S3 website endpoint.
-
-### S3 Static Website Hosting
+The screenshot below shows the S3 bucket configured for Static Website Hosting.
 
 ![Amazon S3 Static Website Hosting](screenshots/s3-static-website-hosting.png)
 
@@ -96,21 +89,23 @@ Static Website Hosting was enabled, allowing the website to be publicly accessib
 
 ## Amazon API Gateway
 
-Amazon API Gateway provides the communication layer between the website and the backend.
+Amazon API Gateway was used to expose the backend through a REST API.
 
-A Regional REST API named **ContactFormAPI** was created with a `/contact` resource. A POST method was configured and integrated with the Lambda function using Lambda Proxy Integration.
+### Creating the REST API
 
-Whenever a user submits the contact form, API Gateway receives the HTTP request and securely forwards it to AWS Lambda for processing.
-
-### Creating the REST API Resource
+A Regional REST API named **ContactFormAPI** was created. This API acts as the entry point for requests coming from the website.
 
 ![API Creation](screenshots/APIcreation.png)
 
 ### Creating the POST Method
 
+A POST method was added to the `/contact` resource. This method receives the contact form submission and forwards it to AWS Lambda using Lambda Proxy Integration.
+
 ![Create POST Method](screenshots/newmethod.png)
 
 ### Lambda Integration
+
+The screenshot below shows the successful integration between API Gateway and the Lambda function.
 
 ![API POST Method](screenshots/APIcreatemethod.png)
 
@@ -120,36 +115,33 @@ Whenever a user submits the contact form, API Gateway receives the HTTP request 
 
 AWS Lambda serves as the backend of the application.
 
-Instead of running a traditional web server, Lambda automatically executes Python code whenever a request is received from API Gateway.
-
-The Lambda function performs several important tasks:
-
-- Receives contact form submissions.
-- Validates user input.
-- Generates a unique Submission ID.
-- Stores submitted information in DynamoDB.
-- Sends an email notification through Amazon SES.
-- Returns a JSON response back to the frontend.
-
-Because Lambda follows a serverless execution model, there is no need to manage infrastructure or configure operating systems. AWS automatically provisions the compute resources required whenever the function is invoked.
-
 ### Creating the Lambda Function
+
+A Lambda function was created using the Python runtime. It executes automatically whenever API Gateway receives a POST request.
 
 ![Create Lambda Function](screenshots/lambda-create.png)
 
 ### Lambda Execution Role
 
+The execution role determines which AWS services the Lambda function can access.
+
 ![Execution Role](screenshots/lambda-execution-role.png)
 
 ### IAM Permissions
+
+Additional IAM policies were attached to allow the function to access DynamoDB and Amazon SES.
 
 ![IAM Policies](screenshots/Attatchingpermissiontolambda.png)
 
 ### Deploying the Lambda Function
 
+After implementing the Python code, the function was deployed so the latest version became available for execution.
+
 ![Lambda Deployment](screenshots/lambda-code-deployed.png)
 
-### Successful Lambda Test
+### Testing the Lambda Function
+
+A test event was created to verify that the Lambda function executed successfully and returned the expected response before connecting it to the frontend.
 
 ![Lambda Test](screenshots/Screenshot 2026-08-02 222836.png)
 
@@ -157,23 +149,11 @@ Because Lambda follows a serverless execution model, there is no need to manage 
 
 ## Amazon DynamoDB
 
-Amazon DynamoDB is the database used to permanently store every contact form submission.
+Amazon DynamoDB stores every contact form submission.
 
-Each submission is stored as a separate item within the `ContactFormSubmissions` table. The table uses `submission_id` as its partition key to uniquely identify every submission.
+Each submission is stored as a unique item in the `ContactFormSubmissions` table using `submission_id` as the partition key.
 
-Information stored includes:
-
-- Submission ID
-- Name
-- Email Address
-- Subject
-- Message
-- Submission Timestamp
-- Source IP Address
-
-DynamoDB was selected because it provides high performance, automatic scaling, and seamless integration with AWS Lambda.
-
-### DynamoDB Table
+The screenshot below shows the DynamoDB table used by the application.
 
 ![DynamoDB Table](screenshots/dynamo.png)
 
@@ -181,25 +161,20 @@ DynamoDB was selected because it provides high performance, automatic scaling, a
 
 ## Amazon Simple Email Service (SES)
 
-Amazon Simple Email Service (SES) is responsible for sending email notifications whenever a new contact form is submitted.
+Amazon SES sends an email notification whenever a contact form is successfully submitted.
 
-After the Lambda function successfully stores the submission in DynamoDB, SES automatically generates and sends an email containing the user's submitted information to the configured email address.
+Before emails could be sent, the sender email address was verified in Amazon SES. After verification, the Lambda function was able to generate and send notification emails automatically.
 
-This allows administrators to receive immediate notification whenever a visitor submits a message through the contact form.
-
-### Amazon SES Configuration
-
-![Amazon SES](screenshots/SESService.png)
+![Amazon SES](screenshots/SESservice.png)
 
 ---
 
 ## AWS Identity and Access Management (IAM)
 
-AWS Identity and Access Management (IAM) was used to securely control communication between AWS services.
+IAM was used to manage permissions securely between AWS services.
 
-An execution role was attached to the Lambda function with permissions to:
-
+The Lambda execution role was granted permission to:
 - Access Amazon DynamoDB.
 - Send email notifications using Amazon SES.
 
-Using IAM ensures that the Lambda function has only the permissions required to perform its responsibilities, following the principle of least privilege and improving the overall security of the application.
+This ensures the application follows the principle of least privilege while allowing the backend to perform its required tasks.
