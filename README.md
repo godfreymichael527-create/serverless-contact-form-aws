@@ -90,7 +90,7 @@ Static Website Hosting was enabled, allowing the website to be publicly accessib
 
 ### S3 Static Website Hosting
 
-![Amazon S3 Static Website Hosting](s3-static-website-hosting.png)
+![Amazon S3 Static Website Hosting](screenshots/s3-static-website-hosting.png)
 
 ---
 
@@ -104,15 +104,15 @@ Whenever a user submits the contact form, API Gateway receives the HTTP request 
 
 ### Creating the REST API Resource
 
-![API Creation](APIcreation.png)
+![API Creation](screenshots/APIcreation.png)
 
 ### Creating the POST Method
 
-![Create POST Method](newmethod.png)
+![Create POST Method](screenshots/newmethod.png)
 
 ### Lambda Integration
 
-![API POST Method](APIcreatemethod.png)
+![API POST Method](screenshots/APIcreatemethod.png)
 
 ---
 
@@ -135,19 +135,19 @@ Because Lambda follows a serverless execution model, there is no need to manage 
 
 ### Creating the Lambda Function
 
-![Create Lambda Function](lambda-create.png)
+![Create Lambda Function](screenshots/lambda-create.png)
 
 ### Lambda Execution Role
 
-![Execution Role](lambda-execution-role.png)
+![Execution Role](screenshots/lambda-execution-role.png)
 
 ### IAM Permissions
 
-![IAM Policies](Attatchingpermissiontolambda.png)
+![IAM Policies](screenshots/Attatchingpermissiontolambda.png)
 
 ### Deploying the Lambda Function
 
-![Lambda Deployment](lambda-code-deployed.png)
+![Lambda Deployment](screenshots/lambda-code-deployed.png)
 
 ### Successful Lambda Test
 
@@ -189,7 +189,7 @@ This allows administrators to receive immediate notification whenever a visitor 
 
 ### Amazon SES Configuration
 
-![Amazon SES](screenshots/SESservice.png)
+![Amazon SES](screenshots/SESService.png)
 
 ---
 
